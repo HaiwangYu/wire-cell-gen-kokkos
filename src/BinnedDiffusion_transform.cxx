@@ -484,7 +484,10 @@ void GenKokkos::BinnedDiffusion_transform::get_charge_vec(std::vector<std::vecto
   cout << "GaussianDiffusion::sampling_CUDA() part3 time : " << g_set_sampling_part3 << ", part4 time : " << g_set_sampling_part4 << ", part5 time : " << g_set_sampling_part5 << endl;
   cout << "GaussianDiffusion::sampling_CUDA() : g_total_sample_size : " << g_total_sample_size << endl;
 #else
-  cout << "get_charge_vec() : set_sampling() part1 time : " << g_set_sampling_part1 << ", part2 time : " << g_set_sampling_part2 << ", part3 time : " << g_set_sampling_part3 << endl;
+  cout << "get_charge_vec() : set_sampling() part1 time : " << g_set_sampling_part1
+  << ", part2 time : " << g_set_sampling_part2 << ", part3 time : " << g_set_sampling_part3
+  << ", part4 time : " << g_set_sampling_part4 << ", part5 time : " << g_set_sampling_part5
+  << endl;
 #endif
 }
 

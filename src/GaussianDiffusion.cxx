@@ -453,7 +453,10 @@ void GenKokkos::GaussianDiffusion::set_sampling(
 
     Kokkos::deep_copy(ptv_d, ptv_h) ;
 
-    
+    wend = omp_get_wtime();
+    g_set_sampling_part2 += wend - wstart;
+
+    wstart = omp_get_wtime();
     //Kokkos::DualView<float*> patch("patch", npss*ntss);
     kokkos_patching_functor functor(ptv_d, npss, ntss, patch_V.d_view, charge);
     using MDPolicyType_2D = typename Kokkos::Experimental::MDRangePolicy< Kokkos::Experimental::Rank<2> >;
@@ -467,11 +470,8 @@ void GenKokkos::GaussianDiffusion::set_sampling(
     Kokkos::parallel_for("Loop2", npss*ntss, functor);
     //Kokkos::fence();
 
-
-
-
     wend = omp_get_wtime();
-    g_set_sampling_part2 += wend - wstart;
+    g_set_sampling_part3 += wend - wstart;
 
     //cout << "set_sampling() : npss=" << npss << ", ntss=" << ntss << ", m_deposition->charge() = " << m_deposition->charge() << ", raw_sum=" << raw_sum << endl;
 
@@ -496,7 +496,13 @@ void GenKokkos::GaussianDiffusion::set_sampling(
             Kokkos::parallel_for("Loop2", npss*ntss, sampler);
         }
     }
-     View<float*> pt_h(m_patch.data(),ntss*npss) ;
+
+    wend = omp_get_wtime();
+    g_set_sampling_part4 += wend - wstart;
+    
+    wstart = omp_get_wtime();
+
+    View<float*> pt_h(m_patch.data(),ntss*npss) ;
     auto pt_d = Kokkos::subview(patch_V.d_view, std::make_pair( (size_t)0,(size_t)(ntss*npss))) ;
     //auto pt_d = Kokkos::subview(patch_V.d_view, make_pair( 1,500)) ;
 
@@ -508,7 +514,7 @@ void GenKokkos::GaussianDiffusion::set_sampling(
    // memcpy(m_patch.data(), patch_V.h_view.data(), sizeof(float)*ntss*npss);
 
     wend = omp_get_wtime();
-    g_set_sampling_part3 += wend - wstart;
+    g_set_sampling_part5 += wend - wstart;
 
 
 }
